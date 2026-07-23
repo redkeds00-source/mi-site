@@ -1,0 +1,855 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Екатерина · Модель</title>
+
+    <!-- Подключаем шрифты -->
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Подключаем иконки (для слайдера) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+    <style>
+        /* ===== БАЗА ===== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        html {
+            scroll-behavior: smooth;
+        }
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background: #0a0a0a;
+            color: #eaeaea;
+            overflow-x: hidden;
+            line-height: 1.7;
+        }
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 25px;
+        }
+
+        /* ===== СЕКЦИИ (БЕЗ ПОЛНОЭКРАННОСТИ) ===== */
+        .section {
+            padding: 100px 0;
+            position: relative;
+            border-bottom: 1px solid rgba(212, 175, 55, 0.08);
+        }
+
+        /* ===== ВИДЕО-ФОН (ПАРАЛЛАКС) ===== */
+        .video-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: -2;
+            opacity: 0.4;
+        }
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(10, 10, 10, 0.7);
+            z-index: -1;
+        }
+
+        /* ===== ЗОЛОТОЙ ГРАДИЕНТ НА ТЕКСТЕ ===== */
+        .gold-text {
+            background: linear-gradient(135deg, #d4af37, #f9e57c, #d4af37);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        /* ===== ШАПКА + БУРГЕР ===== */
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            padding: 18px 30px;
+            background: rgba(10, 10, 10, 0.85);
+            backdrop-filter: blur(12px);
+            z-index: 1000;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid rgba(212, 175, 55, 0.15);
+        }
+        .logo {
+            font-size: 28px;
+            font-weight: 700;
+            letter-spacing: -1px;
+        }
+        .logo span {
+            color: #d4af37;
+        }
+
+        .nav-menu {
+            display: flex;
+            gap: 35px;
+            list-style: none;
+            font-weight: 500;
+        }
+        .nav-menu a {
+            font-size: 15px;
+            color: #ccc;
+            transition: 0.3s;
+            position: relative;
+        }
+        .nav-menu a:hover,
+        .nav-menu a.active {
+            color: #d4af37;
+        }
+        .nav-menu a.active::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: #d4af37;
+        }
+
+        /* Бургер-меню (скрыто на десктопе) */
+        .burger {
+            display: none;
+            flex-direction: column;
+            gap: 5px;
+            cursor: pointer;
+            z-index: 1001;
+        }
+        .burger span {
+            display: block;
+            width: 28px;
+            height: 3px;
+            background: #fff;
+            border-radius: 3px;
+            transition: 0.3s;
+        }
+        .burger.active span:nth-child(1) {
+            transform: rotate(45deg) translate(5px, 5px);
+        }
+        .burger.active span:nth-child(2) {
+            opacity: 0;
+        }
+        .burger.active span:nth-child(3) {
+            transform: rotate(-45deg) translate(5px, -5px);
+        }
+
+        /* ===== ГЕРОЙ ===== */
+        .hero {
+            text-align: center;
+            padding-top: 120px;
+            padding-bottom: 80px;
+        }
+        .hero .tag {
+            display: inline-block;
+            background: rgba(212, 175, 55, 0.15);
+            color: #d4af37;
+            padding: 8px 25px;
+            border-radius: 40px;
+            font-size: 13px;
+            font-weight: 600;
+            letter-spacing: 1px;
+            margin-bottom: 20px;
+            border: 1px solid rgba(212, 175, 55, 0.2);
+        }
+        .hero h1 {
+            font-size: 72px;
+            font-weight: 700;
+            line-height: 1.1;
+            margin-bottom: 20px;
+        }
+        .hero h1 .gold-text {
+            font-size: 82px;
+        }
+        .hero p {
+            font-size: 20px;
+            color: #aaa;
+            max-width: 600px;
+            margin: 0 auto 35px;
+        }
+        .btn-group {
+            display: flex;
+            gap: 18px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        .btn {
+            padding: 16px 40px;
+            border-radius: 60px;
+            font-weight: 600;
+            font-size: 16px;
+            transition: 0.3s;
+            border: none;
+            cursor: pointer;
+            font-family: 'Montserrat', sans-serif;
+        }
+        .btn-primary {
+            background: #d4af37;
+            color: #0a0a0a;
+        }
+        .btn-primary:hover {
+            background: #f9e57c;
+            transform: scale(1.05);
+            box-shadow: 0 0 30px rgba(212, 175, 55, 0.3);
+        }
+        .btn-outline {
+            background: transparent;
+            color: #fff;
+            border: 1.5px solid rgba(255, 255, 255, 0.2);
+        }
+        .btn-outline:hover {
+            border-color: #d4af37;
+            color: #d4af37;
+        }
+
+        /* ===== ЗАГОЛОВКИ СЕКЦИЙ ===== */
+        .section-title {
+            font-size: 44px;
+            font-weight: 700;
+            margin-bottom: 50px;
+            text-align: center;
+        }
+        .section-title .gold-text {
+            font-size: 48px;
+        }
+
+        /* ===== УСЛУГИ ===== */
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 35px;
+        }
+        .service-card {
+            background: rgba(255, 255, 255, 0.03);
+            padding: 40px 30px;
+            border-radius: 24px;
+            text-align: center;
+            border: 1px solid rgba(212, 175, 55, 0.1);
+            transition: 0.4s;
+        }
+        .service-card:hover {
+            transform: translateY(-12px);
+            border-color: #d4af37;
+            box-shadow: 0 20px 60px rgba(212, 175, 55, 0.08);
+        }
+        .service-card .icon {
+            font-size: 48px;
+            margin-bottom: 15px;
+            display: block;
+        }
+        .service-card h3 {
+            font-size: 22px;
+            margin-bottom: 10px;
+            color: #fff;
+        }
+        .service-card p {
+            color: #999;
+            font-size: 15px;
+        }
+
+        /* ===== СЛАЙДЕР ПОРТФОЛИО ===== */
+        .slider-container {
+            position: relative;
+            max-width: 1000px;
+            margin: 0 auto;
+            overflow: hidden;
+        }
+        .slider-track {
+            display: flex;
+            transition: transform 0.5s ease;
+        }
+        .slide {
+            min-width: 100%;
+            padding: 0 20px;
+        }
+        .slide .img {
+            height: 420px;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 80px;
+            color: #444;
+            border: 1px solid rgba(212, 175, 55, 0.1);
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+        .slide .img img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .slide .info h4 {
+            font-size: 24px;
+            margin-bottom: 6px;
+        }
+        .slide .info p {
+            color: #999;
+        }
+
+        .slider-btn {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(212, 175, 55, 0.15);
+            border: 1px solid rgba(212, 175, 55, 0.2);
+            color: #fff;
+            width: 54px;
+            height: 54px;
+            border-radius: 50%;
+            font-size: 22px;
+            cursor: pointer;
+            z-index: 10;
+            transition: 0.3s;
+            backdrop-filter: blur(8px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .slider-btn:hover {
+            background: #d4af37;
+            color: #0a0a0a;
+        }
+        .slider-btn.prev {
+            left: 0;
+        }
+        .slider-btn.next {
+            right: 0;
+        }
+
+        /* ===== ОТЗЫВЫ ===== */
+        .reviews-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+        }
+        .review-card {
+            background: rgba(255, 255, 255, 0.03);
+            padding: 30px 25px;
+            border-radius: 24px;
+            border: 1px solid rgba(212, 175, 55, 0.08);
+            backdrop-filter: blur(8px);
+        }
+        .review-card .stars {
+            color: #d4af37;
+            letter-spacing: 3px;
+            margin-bottom: 12px;
+            font-size: 18px;
+        }
+        .review-card blockquote {
+            font-style: italic;
+            color: #ccc;
+            margin-bottom: 15px;
+        }
+        .review-card .author {
+            font-weight: 600;
+            color: #fff;
+        }
+        .review-card .role {
+            font-size: 14px;
+            color: #888;
+        }
+
+        /* ===== КОНТАКТЫ ===== */
+        .contact-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 60px;
+        }
+        .contact-info .item {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            margin-bottom: 18px;
+            font-size: 18px;
+        }
+        .contact-info .item span {
+            font-size: 26px;
+            color: #d4af37;
+        }
+        .social-links {
+            display: flex;
+            gap: 16px;
+            margin-top: 25px;
+            flex-wrap: wrap;
+        }
+        .social-links a {
+            background: rgba(212, 175, 55, 0.08);
+            padding: 12px 24px;
+            border-radius: 40px;
+            font-weight: 500;
+            border: 1px solid rgba(212, 175, 55, 0.1);
+            transition: 0.3s;
+            font-size: 14px;
+        }
+        .social-links a:hover {
+            background: #d4af37;
+            color: #0a0a0a;
+        }
+
+        /* ===== ФОРМА ===== */
+        .form-group {
+            margin-bottom: 22px;
+        }
+        .form-group label {
+            display: block;
+            font-weight: 500;
+            margin-bottom: 6px;
+            color: #aaa;
+            font-size: 14px;
+        }
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 16px 20px;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 16px;
+            color: #fff;
+            font-size: 16px;
+            font-family: 'Montserrat', sans-serif;
+            transition: 0.3s;
+        }
+        .form-group input:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #d4af37;
+            background: rgba(212, 175, 55, 0.04);
+        }
+        .form-group textarea {
+            height: 140px;
+            resize: vertical;
+        }
+        .btn-submit {
+            background: #d4af37;
+            color: #0a0a0a;
+            padding: 16px 44px;
+            border: none;
+            border-radius: 60px;
+            font-weight: 600;
+            font-size: 17px;
+            cursor: pointer;
+            transition: 0.3s;
+            font-family: 'Montserrat', sans-serif;
+        }
+        .btn-submit:hover {
+            background: #f9e57c;
+            transform: scale(1.03);
+        }
+
+        /* ===== КНОПКА «НАВЕРХ» ===== */
+        .back-to-top {
+            position: fixed;
+            bottom: 40px;
+            right: 40px;
+            background: #d4af37;
+            color: #0a0a0a;
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            cursor: pointer;
+            z-index: 999;
+            border: none;
+            box-shadow: 0 8px 30px rgba(212, 175, 55, 0.25);
+            transition: 0.3s;
+        }
+        .back-to-top:hover {
+            transform: scale(1.1);
+            background: #f9e57c;
+        }
+        .back-to-top.visible {
+            display: flex;
+        }
+
+        /* ===== АНИМАЦИИ ===== */
+        .fade-up {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: opacity 0.8s ease, transform 0.8s ease;
+        }
+        .fade-up.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* ===== АДАПТИВ ===== */
+        @media (max-width: 992px) {
+            .hero h1 {
+                font-size: 52px;
+            }
+            .hero h1 .gold-text {
+                font-size: 58px;
+            }
+            .section-title {
+                font-size: 34px;
+            }
+            .section-title .gold-text {
+                font-size: 38px;
+            }
+            .contact-grid {
+                grid-template-columns: 1fr;
+                gap: 40px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            /* Бургер-меню */
+            .burger {
+                display: flex;
+            }
+            .nav-menu {
+                position: fixed;
+                top: 0;
+                right: -100%;
+                width: 70%;
+                height: 100vh;
+                background: #0a0a0a;
+                flex-direction: column;
+                padding: 100px 40px 40px;
+                gap: 25px;
+                transition: 0.4s ease;
+                border-left: 1px solid rgba(212, 175, 55, 0.1);
+                font-size: 20px;
+            }
+            .nav-menu.open {
+                right: 0;
+            }
+            .nav-menu a {
+                font-size: 18px;
+            }
+            .hero {
+                padding-top: 100px;
+            }
+            .hero h1 {
+                font-size: 38px;
+            }
+            .hero h1 .gold-text {
+                font-size: 44px;
+            }
+            .hero p {
+                font-size: 17px;
+            }
+            .section-title {
+                font-size: 28px;
+            }
+            .section-title .gold-text {
+                font-size: 32px;
+            }
+            .slide .img {
+                height: 260px;
+            }
+            .services-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+            .reviews-grid {
+                grid-template-columns: 1fr;
+            }
+            .back-to-top {
+                bottom: 25px;
+                right: 25px;
+                width: 48px;
+                height: 48px;
+                font-size: 20px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .services-grid {
+                grid-template-columns: 1fr;
+            }
+            .hero h1 {
+                font-size: 30px;
+            }
+            .hero h1 .gold-text {
+                font-size: 34px;
+            }
+            .btn {
+                padding: 14px 30px;
+                font-size: 14px;
+            }
+            .slider-btn {
+                width: 40px;
+                height: 40px;
+                font-size: 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ===== ВИДЕО-ФОН (замените ссылку на ваше видео) ===== -->
+    <video class="video-bg" autoplay muted loop playsinline>
+        <source src="https://www.w3schools.com/html/mov_bbb.mp4" type="video/mp4">
+        <!-- Ваш браузер не поддерживает видео -->
+    </video>
+    <div class="overlay"></div>
+
+    <!-- ===== ШАПКА + БУРГЕР ===== -->
+    <header>
+        <div class="logo">E<span>.</span></div>
+        <ul class="nav-menu" id="navMenu">
+            <li><a href="#about" class="active">Обо мне</a></li>
+            <li><a href="#services">Услуги</a></li>
+            <li><a href="#portfolio">Портфолио</a></li>
+            <li><a href="#reviews">Отзывы</a></li>
+            <li><a href="#contact">Контакты</a></li>
+        </ul>
+        <div class="burger" id="burger">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+    </header>
+
+    <!-- ===== ГЕРОЙ ===== -->
+    <section class="hero" id="about">
+        <div class="container">
+            <span class="tag">✦ TOP MODEL</span>
+            <h1>Привет, я <br><span class="gold-text">Екатерина</span></h1>
+            <p>Профессиональная модель с международным опытом. Создаю сильные, естественные и вдохновляющие образы для брендов, фотографов и агентств.</p>
+            <div class="btn-group">
+                <a href="#contact" class="btn btn-primary">Связаться</a>
+                <a href="#portfolio" class="btn btn-outline">Смотреть работы</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== УСЛУГИ ===== -->
+    <section class="section" id="services">
+        <div class="container">
+            <h2 class="section-title">Мои <span class="gold-text">услуги</span></h2>
+            <div class="services-grid">
+                <div class="service-card fade-up">
+                    <span class="icon">📷</span>
+                    <h3>Fashion-съёмки</h3>
+                    <p>Для журналов, портфолио, лукбуков</p>
+                </div>
+                <div class="service-card fade-up">
+                    <span class="icon">🎬</span>
+                    <h3>Реклама и коммерция</h3>
+                    <p>Для брендов, каталогов и соцсетей</p>
+                </div>
+                <div class="service-card fade-up">
+                    <span class="icon">👗</span>
+                    <h3>Дефиле</h3>
+                    <p>Показы на подиумах, недели моды</p>
+                </div>
+                <div class="service-card fade-up">
+                    <span class="icon">💄</span>
+                    <h3>Beauty-съёмки</h3>
+                    <p>Макияж, косметика, уход</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== ПОРТФОЛИО (СЛАЙДЕР) ===== -->
+    <section class="section" id="portfolio">
+        <div class="container">
+            <h2 class="section-title">Порт<span class="gold-text">фолио</span></h2>
+            <div class="slider-container">
+                <div class="slider-track" id="sliderTrack">
+                    <!-- Слайд 1 -->
+                    <div class="slide">
+                        <div class="img">
+                            <img src="https://i.postimg.cc/RZQxfBhG/8DB59D9A-66C7-43B4-A0BA-BA8D5F6E6AAD.jpg" alt="Работа 1">
+                        </div>
+                        <div class="info">
+                            <h4>Vogue Italia</h4>
+                            <p>Съёмка для июльского номера</p>
+                        </div>
+                    </div>
+                    <!-- Слайд 2 -->
+                    <div class="slide">
+                        <div class="img" style="background: #1a1a1a; color: #d4af37; font-size: 60px;">
+                            🖤
+                        </div>
+                        <div class="info">
+                            <h4>Dolce & Gabbana</h4>
+                            <p>Рекламная кампания весна-лето</p>
+                        </div>
+                    </div>
+                    <!-- Слайд 3 -->
+                    <div class="slide">
+                        <div class="img" style="background: #1a1a1a; color: #d4af37; font-size: 60px;">
+                            ✨
+                        </div>
+                        <div class="info">
+                            <h4>Calvin Klein</h4>
+                            <p>Lookbook 2025</p>
+                        </div>
+                    </div>
+                </div>
+                <button class="slider-btn prev" id="prevBtn"><i class="fas fa-chevron-left"></i></button>
+                <button class="slider-btn next" id="nextBtn"><i class="fas fa-chevron-right"></i></button>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== ОТЗЫВЫ ===== -->
+    <section class="section" id="reviews">
+        <div class="container">
+            <h2 class="section-title">От<span class="gold-text">зывы</span></h2>
+            <div class="reviews-grid">
+                <div class="review-card fade-up">
+                    <div class="stars">★★★★★</div>
+                    <blockquote>«Екатерина — профессионал высшего уровня. Работать с ней одно удовольствие.»</blockquote>
+                    <div class="author">Екатерина Иванова</div>
+                    <div class="role">Фотограф, Vogue</div>
+                </div>
+                <div class="review-card fade-up">
+                    <div class="stars">★★★★★</div>
+                    <blockquote>«Очень ответственная и креативная. Рекомендую всем брендам.»</blockquote>
+                    <div class="author">Марк Петров</div>
+                    <div class="role">Продюсер, Dolce</div>
+                </div>
+                <div class="review-card fade-up">
+                    <div class="stars">★★★★★</div>
+                    <blockquote>«Привносит магию в каждый кадр. Идеальный партнёр.»</blockquote>
+                    <div class="author">Ольга Смирнова</div>
+                    <div class="role">Стилист</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== КОНТАКТЫ ===== -->
+    <section class="section" id="contact">
+        <div class="container">
+            <h2 class="section-title">Свя<span class="gold-text">заться</span></h2>
+            <div class="contact-grid">
+                <div class="contact-info">
+                    <p style="color:#aaa; margin-bottom:25px;">Я родом из Москвы, но моя работа привела меня в 12 стран. За 5 лет карьеры я участвовала в более чем 50 показах и съёмках для таких брендов, как Vogue, Dolce & Gabbana и Calvin Klein. Для меня каждая съёмка — это диалог. Я не просто модель, я соавтор. Моя цель — передать вашу идею через эмоцию, движение и взгляд. Я люблю свою работу, и это видно в каждом кадре.</p>
+                    <div class="item"><span>📱</span> +7 999 123-45-67</div>
+                    <div class="item"><span>✉️</span> ekaterina@model.com</div>
+                    <div class="item"><span>📍</span> Москва, Россия</div>
+                    <div class="social-links">
+                        <a href="#">Instagram</a>
+                        <a href="#">Telegram</a>
+                        <a href="#">LinkedIn</a>
+                    </div>
+                </div>
+                <form id="contactForm">
+                    <div class="form-group">
+                        <label for="name">Ваше имя</label>
+                        <input type="text" id="name" placeholder="Алексей" required />
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email</label>
+                        <input type="email" id="email" placeholder="alex@mail.ru" required />
+                    </div>
+                    <div class="form-group">
+                        <label for="message">Сообщение</label>
+                        <textarea id="message" placeholder="Расскажите о проекте..." required></textarea>
+                    </div>
+                    <button type="submit" class="btn-submit">Отправить →</button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== ФУТЕР ===== -->
+    <footer style="padding: 30px 0; text-align: center; color: #555; font-size: 14px; border-top: 1px solid rgba(212,175,55,0.05);">
+        <div class="container">© 2026 Екатерина · Модель. Все права защищены.</div>
+    </footer>
+
+    <!-- ===== КНОПКА «НАВЕРХ» ===== -->
+    <button class="back-to-top" id="backToTop"><i class="fas fa-arrow-up"></i></button>
+
+    <!-- ===== СКРИПТЫ ===== -->
+    <script>
+        // --- БУРГЕР-МЕНЮ ---
+        const burger = document.getElementById('burger');
+        const navMenu = document.getElementById('navMenu');
+        burger.addEventListener('click', () => {
+            burger.classList.toggle('active');
+            navMenu.classList.toggle('open');
+        });
+        document.querySelectorAll('.nav-menu a').forEach(link => {
+            link.addEventListener('click', () => {
+                burger.classList.remove('active');
+                navMenu.classList.remove('open');
+            });
+        });
+
+        // --- АКТИВНАЯ ССЫЛКА В МЕНЮ ---
+        const navLinks = document.querySelectorAll('.nav-menu a');
+        navLinks.forEach(link => {
+            link.addEventListener('click', function() {
+                navLinks.forEach(l => l.classList.remove('active'));
+                this.classList.add('active');
+            });
+        });
+
+        // --- СЛАЙДЕР ---
+        const track = document.getElementById('sliderTrack');
+        const slides = Array.from(track.children);
+        const nextBtn = document.getElementById('nextBtn');
+        const prevBtn = document.getElementById('prevBtn');
+        let currentIndex = 0;
+
+        function updateSlide() {
+            track.style.transform = 'translateX(-' + (currentIndex * 100) + '%)';
+        }
+        nextBtn.addEventListener('click', () => {
+            currentIndex = (currentIndex + 1) % slides.length;
+            updateSlide();
+        });
+        prevBtn.addEventListener('click', () => {
+            currentIndex = (currentIndex - 1 + slides.length) % slides.length;
+            updateSlide();
+        });
+
+        // --- КНОПКА «НАВЕРХ» ---
+        const backToTop = document.getElementById('backToTop');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 300) {
+                backToTop.classList.add('visible');
+            } else {
+                backToTop.classList.remove('visible');
+            }
+        });
+        backToTop.addEventListener('click', () => {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+
+        // --- АНИМАЦИЯ ПОЯВЛЕНИЯ ---
+        const fadeEls = document.querySelectorAll('.fade-up');
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, { threshold: 0.15 });
+        fadeEls.forEach(el => observer.observe(el));
+
+        // --- ОТПРАВКА ФОРМЫ (ДЕМО) ---
+        document.getElementById('contactForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            alert('✅ Спасибо! Ваше сообщение отправлено (демо-режим).');
+            this.reset();
+        });
+    </script>
+</body>
+</html>
